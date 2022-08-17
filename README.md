@@ -1,6 +1,23 @@
 # face-analysis
 Este projeto consiste em uma aplicação Serverless, em **AWS Lambda**, com o objetivo de realizar o reconhecimento facial em imagens. Para tanto, foi utilizado o serviço **AWS S3**, para armazenamento de imagens e Trigger da Lambda, bem como o **AWS Rekognition**, que realiza a detecção de faces nas imagens recebidas. Então, os resultados serão exibidos em um site estático, exibindo tudo o que foi encontrado em uma imagem, com seu respectivo grau de similaridade.
 
+# Arquitetura
+
+![application_architecture](https://user-images.githubusercontent.com/51297679/185242817-cd86ae23-1830-40e2-af48-057d7b52e301.png)
+
+Como mostrado na arquitetura da solução, o fluxo da aplicação será:
+
+1. O usuário faz o upload da imagem no site.
+2. Essa ação no bucket dispara o Trigger da Lambda.
+3. A Lambda transfere a imagem para o serviço do Rekognition.
+4. Esse serviço realiza o reconhecimento facial.
+5. Caso sejam identificadas faces, essas informações serão utilizadas para comparação com as imagens categorizadas, no bucket.
+6. Então, poderá ser identificado alguém conhecido nessa nova imagem, sendo o resultado retornado ao Lambda.
+7. O Lambda publica os resultados no bucket do site.
+8. A página do site é atualizada com o resultado, via JavaScript, e então o usuário irá ver quem foi encontrado nas imagens, com o grau de similaridade.
+
+O bucket de site servirá como uma página Web, contendo JavaScript, que permitirá o upload de imagens e exibição dos resultados, enquanto que o bucket de imagens será o como um banco de dados, contendo imagens já categorizadas, indicando quem está presente em cada foto.
+
 # Dependências
 
 ## Instalações
