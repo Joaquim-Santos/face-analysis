@@ -18,10 +18,10 @@ class ImageIndex:
         return face_images
 
     def index_collection(self, face_images: List[str]) -> List[dict]:
-        responses = []
+        detected_faces = []
 
         for image in face_images:
-            response = self.__rekognition_client.index_faces(
+            face = self.__rekognition_client.index_faces(
                 CollectionId='faces',
                 Image={
                     'S3Object': {
@@ -35,9 +35,24 @@ class ImageIndex:
                 ]
             )
 
-            responses.append(response)
+            detected_faces.append(face)
 
-        return responses
+        return detected_faces
+
+    def index_target_image(self) -> dict:
+        return self.__rekognition_client.index_faces(
+            CollectionId='faces',
+            Image={
+                'S3Object': {
+                    'Bucket': 'face-analysis-images',
+                    'Name': "_target.png"
+                }
+            },
+            ExternalImageId="target",
+            DetectionAttributes=[
+                'DEFAULT'
+            ]
+        )
 
 
 if __name__ == "__main__":
