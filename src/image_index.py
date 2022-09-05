@@ -9,12 +9,10 @@ class ImageIndex:
 
     def list_images(self) -> List[str]:
         images = []
-        bucket = self.__s3.Bucket['face-analysis-images']
+        bucket = self.__s3.Bucket('face-analysis-images')
 
         for image in bucket.objects.all():
             images.append(image.key)
-
-        print(images)
 
         return images
 
