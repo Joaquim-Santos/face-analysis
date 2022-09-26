@@ -1,7 +1,7 @@
 import boto3
 import os
 
-from typing import List, Dict
+from typing import List, Dict, Union
 from botocore.exceptions import ClientError
 
 
@@ -14,6 +14,7 @@ class ImageIndex:
 
         self.__rekognition_client = boto3.client('rekognition')
         self.__collection_id = 'faces'
+        self.__target_image_id = 'target'
 
     def __list_input_images(self) -> Dict[str, str]:
         face_images = {}
@@ -73,7 +74,7 @@ class ImageIndex:
                     'Name': f'{self.__output_prefix}{image_name}'
                 }
             },
-            ExternalImageId="target",
+            ExternalImageId=self.__target_image_id,
             DetectionAttributes=[
                 'DEFAULT'
             ]
@@ -84,7 +85,7 @@ class ImageIndex:
         return [record['Face']['FaceId'] for record in detected_faces['FaceRecords']]
 
     def __find_images_by_similarity(self, detected_faces_ids: List[str],
-                                    threshold: float = 90) -> List[str]:
+                                    threshold: float = 90) -> List[Dict[str, Union[str, float]]]:
         found_images = []
 
         for face_id in detected_faces_ids:
@@ -96,9 +97,14 @@ class ImageIndex:
             )
 
             for face_match in matched_faces['FaceMatches']:
-                if face_match['Face']['ExternalImageId'] != 'target':
+                if face_match['Face']['ExternalImageId'] != self.__target_image_id:
+                    similarity = round(face_match['Similarity'], 2)
                     image_name = face_match['Face']['ExternalImageId']
-                    found_images.append(image_name)
+
+                    found_images.append({
+                        'image_name': image_name,
+                        'similarity': similarity
+                    })
                     break
 
         return found_images
@@ -109,7 +115,7 @@ class ImageIndex:
             FaceIds=detected_faces_ids
         )
 
-    def match_images(self, image_name: str) -> List[str]:
+    def match_images(self, image_name: str) -> List[Dict[str, Union[str, float]]]:
         detected_faces = self.__index_target_image(image_name)
         detected_faces_ids = self.__get_detected_faces_ids(detected_faces)
         found_images = self.__find_images_by_similarity(detected_faces_ids)
