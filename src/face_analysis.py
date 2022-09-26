@@ -6,8 +6,8 @@ class FaceAnalysis:
         self.__image_index = ImageIndex()
 
     def detect_faces(self):
-        detected_faces = self.__image_index.index_target_image()
-        print(detected_faces)
+        found_images = self.__image_index.match_images('winchester_family.png')
+        print(found_images)
 
 
 if __name__ == "__main__":
