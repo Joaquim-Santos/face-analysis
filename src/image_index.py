@@ -1,35 +1,45 @@
 import boto3
+import os
 
-from typing import List
+from typing import List, Dict
 
 
 class ImageIndex:
     def __init__(self) -> None:
-        self.__s3 = boto3.resource('s3')
+        self.__s3_client = boto3.client('s3')
+        self.__bucket = os.environ['FACES_BUCKET']
+        self.__input_prefix = 'input/'
+        self.__target_image_path = 'output/target.png'
+
         self.__rekognition_client = boto3.client('rekognition')
 
-    def list_images(self) -> List[str]:
-        face_images = []
-        bucket = self.__s3.Bucket('face-analysis-images')
+    def list_images(self) -> Dict[str, str]:
+        face_images = {}
 
-        for image in bucket.objects.all():
-            face_images.append(image.key)
+        response = self.__s3_client.list_objects_v2(Bucket=self.__bucket,
+                                                    Prefix=self.__input_prefix)
+
+        for item in response['Contents'][1:]:
+            image_name = item['Key'].split(self.__input_prefix)[1]
+            image_name = image_name.split('.')[0]
+
+            face_images[item['Key']] = image_name
 
         return face_images
 
-    def index_collection(self, face_images: List[str]) -> List[dict]:
+    def index_collection(self, face_images: Dict[str, str]) -> List[dict]:
         detected_faces = []
 
-        for image in face_images:
+        for image_path, image_name in face_images.items():
             face = self.__rekognition_client.index_faces(
                 CollectionId='faces',
                 Image={
                     'S3Object': {
                         'Bucket': 'face-analysis-images',
-                        'Name': image
+                        'Name': image_path
                     }
                 },
-                ExternalImageId=image.split('.')[0],
+                ExternalImageId=image_name,
                 DetectionAttributes=[
                     'DEFAULT'
                 ]
@@ -45,7 +55,7 @@ class ImageIndex:
             Image={
                 'S3Object': {
                     'Bucket': 'face-analysis-images',
-                    'Name': "_target.png"
+                    'Name': self.__target_image_path
                 }
             },
             ExternalImageId="target",

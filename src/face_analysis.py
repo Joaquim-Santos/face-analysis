@@ -7,6 +7,7 @@ class FaceAnalysis:
 
     def detect_faces(self):
         detected_faces = self.__image_index.index_target_image()
+        print(detected_faces)
 
 
 if __name__ == "__main__":
