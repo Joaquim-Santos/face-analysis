@@ -1,5 +1,6 @@
 import boto3
 import os
+import json
 
 from typing import List, Dict, Union
 from botocore.exceptions import ClientError
@@ -8,7 +9,8 @@ from botocore.exceptions import ClientError
 class ImageIndex:
     def __init__(self) -> None:
         self.__s3_client = boto3.client('s3')
-        self.__bucket = os.environ['FACES_BUCKET']
+        self.__faces_bucket = os.environ['FACES_BUCKET']
+        self.__site_bucket = os.environ['SITE_BUCKET']
         self.__input_prefix = 'input/'
         self.__output_prefix = 'output/'
 
@@ -19,7 +21,7 @@ class ImageIndex:
     def __list_input_images(self) -> Dict[str, str]:
         face_images = {}
 
-        response = self.__s3_client.list_objects_v2(Bucket=self.__bucket,
+        response = self.__s3_client.list_objects_v2(Bucket=self.__faces_bucket,
                                                     Prefix=self.__input_prefix)
 
         for item in response['Contents'][1:]:
@@ -46,7 +48,7 @@ class ImageIndex:
                 CollectionId=self.__collection_id,
                 Image={
                     'S3Object': {
-                        'Bucket': self.__bucket,
+                        'Bucket': self.__faces_bucket,
                         'Name': image_path
                     }
                 },
@@ -70,7 +72,7 @@ class ImageIndex:
             CollectionId=self.__collection_id,
             Image={
                 'S3Object': {
-                    'Bucket': self.__bucket,
+                    'Bucket': self.__faces_bucket,
                     'Name': f'{self.__output_prefix}{image_name}'
                 }
             },
@@ -115,11 +117,17 @@ class ImageIndex:
             FaceIds=detected_faces_ids
         )
 
+    def __save_data_on_s3(self, found_images: List[Dict[str, Union[str, float]]]) -> None:
+        self.__s3_client.put_object(Bucket=self.__site_bucket, Key='data.json',
+                                    Body=json.dumps(found_images))
+
     def match_images(self, image_name: str) -> List[Dict[str, Union[str, float]]]:
         detected_faces = self.__index_target_image(image_name)
         detected_faces_ids = self.__get_detected_faces_ids(detected_faces)
         found_images = self.__find_images_by_similarity(detected_faces_ids)
+
         self.__delete_target_images(detected_faces_ids)
+        self.__save_data_on_s3(found_images)
 
         return found_images
 
