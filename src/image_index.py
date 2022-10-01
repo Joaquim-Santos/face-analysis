@@ -5,10 +5,12 @@ import json
 from typing import List, Dict, Union
 from botocore.exceptions import ClientError
 
+from src.s3_service import S3Service
+
 
 class ImageIndex:
     def __init__(self) -> None:
-        self.__s3_client = boto3.client('s3')
+        self.__s3_service = S3Service()
         self.__faces_bucket = os.environ['FACES_BUCKET']
         self.__site_bucket = os.environ['SITE_BUCKET']
         self.__input_prefix = 'input/'
@@ -21,14 +23,14 @@ class ImageIndex:
     def __list_input_images(self) -> Dict[str, str]:
         face_images = {}
 
-        response = self.__s3_client.list_objects_v2(Bucket=self.__faces_bucket,
-                                                    Prefix=self.__input_prefix)
+        images_paths = self.__s3_service.get_files_names(
+            self.__faces_bucket, self.__input_prefix)
 
-        for item in response['Contents'][1:]:
-            image_name = item['Key'].split(self.__input_prefix)[1]
+        for image_path in images_paths:
+            image_name = image_path.split(self.__input_prefix)[1]
             image_name = image_name.split('.')[0]
 
-            face_images[item['Key']] = image_name
+            face_images[image_path] = image_name
 
         return face_images
 
@@ -65,7 +67,7 @@ class ImageIndex:
     def index_input_images(self) -> List[dict]:
         self.__clean_collection()
         input_images = self.__list_input_images()
-        return image_index.__index_collection(input_images)
+        return self.__index_collection(input_images)
 
     def __index_target_image(self, image_name: str) -> dict:
         return self.__rekognition_client.index_faces(
@@ -118,8 +120,8 @@ class ImageIndex:
         )
 
     def __save_data_on_s3(self, found_images: List[Dict[str, Union[str, float]]]) -> None:
-        self.__s3_client.put_object(Bucket=self.__site_bucket, Key='data.json',
-                                    Body=json.dumps(found_images))
+        self.__s3_service.save_data(self.__site_bucket, 'data.json',
+                                    json.dumps(found_images))
 
     def match_images(self, image_name: str) -> List[Dict[str, Union[str, float]]]:
         detected_faces = self.__index_target_image(image_name)
