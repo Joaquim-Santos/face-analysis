@@ -1,10 +1,20 @@
-from typing import List, Dict, Union
-
 from src.face_analysis import FaceAnalysis
+from src.exceptions.abstract_exception import AbstractException
 
 
-def lambda_handler(event: dict, context) -> List[Dict[str, Union[str, float]]]:
-    return FaceAnalysis(event).detect_faces()
+def lambda_handler(event: dict, context) -> dict:
+    try:
+        detected_images = FaceAnalysis(event).detect_faces()
+
+        return {
+            'statusCode': 200,
+            'body': f'Detectadas {len(detected_images)} imagens.'
+        }
+    except AbstractException as detected_error:
+        return {
+            'statusCode': detected_error.status_code,
+            'body': detected_error.message
+        }
 
 
 if __name__ == "__main__":

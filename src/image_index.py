@@ -131,8 +131,3 @@ class ImageIndex:
         self.__save_data_on_s3(found_images)
 
         return found_images
-
-
-if __name__ == "__main__":
-    image_index = ImageIndex()
-    image_index.index_input_images()
