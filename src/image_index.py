@@ -14,10 +14,9 @@ class ImageIndex:
         self.__faces_bucket = os.environ['FACES_BUCKET']
         self.__site_bucket = os.environ['SITE_BUCKET']
         self.__input_prefix = 'input/'
-        self.__output_prefix = 'output/'
 
         self.__rekognition_client = boto3.client('rekognition')
-        self.__collection_id = 'faces'
+        self.__collection_id = os.environ['COLLECTION_ID']
         self.__target_image_id = 'target'
 
     def __list_input_images(self) -> Dict[str, str]:
@@ -75,7 +74,7 @@ class ImageIndex:
             Image={
                 'S3Object': {
                     'Bucket': self.__faces_bucket,
-                    'Name': f'{self.__output_prefix}{image_name}'
+                    'Name': image_name
                 }
             },
             ExternalImageId=self.__target_image_id,
