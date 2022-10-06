@@ -15,6 +15,11 @@ def lambda_handler(event: dict, context) -> dict:
             'statusCode': detected_error.status_code,
             'body': detected_error.message
         }
+    except Exception as generic_error:
+        return {
+            'statusCode': 500,
+            'body': str(generic_error)
+        }
 
 
 if __name__ == "__main__":
