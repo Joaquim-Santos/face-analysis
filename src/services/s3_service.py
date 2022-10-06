@@ -9,7 +9,11 @@ class S3Service:
 
     def get_files_names(self, bucket: str, prefix: str) -> List[str]:
         response = self.__s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix)
-        content = response['Contents'][1:]
+
+        try:
+            content = response['Contents'][1:]
+        except KeyError:
+            return []
 
         return [item['Key'] for item in content]
 

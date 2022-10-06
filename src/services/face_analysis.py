@@ -2,11 +2,12 @@ from typing import List, Dict, Union
 from botocore.exceptions import ClientError
 
 from src.logger import Logger
-from src.image_index import ImageIndex
+from src.services.image_index import ImageIndex
 from src.exceptions import BadRequest, GenericException
 
 
 class FaceAnalysis:
+
     def __init__(self, event: dict) -> None:
         self.__image_name: str
 

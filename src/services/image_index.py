@@ -5,7 +5,7 @@ import json
 from typing import List, Dict, Union
 from botocore.exceptions import ClientError
 
-from src.s3_service import S3Service
+from src.services.s3_service import S3Service
 
 
 class ImageIndex:
