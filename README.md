@@ -60,5 +60,18 @@ Para instalar as dependências:
 - No campo **Package requirements file,** selecione o arquivo ****requirements.txt
 - Ao confirmar, aparecerá uma mensagem na IDE para instalar as dependências no arquivo, basta selecionar **Install requirements**
 
-# Execução
 
+## Variáveis de Ambiente
+
+No momento, as variáveis de ambiente necessárias para execução do projeto são:
+
+1. **COLLECTION_ID** - Nome da coleção a ser usada para indexação de imagens, pelo serviço do AWS Rekognition. Deverá ser criada ao executar o módulo do Job para indexação de imagens.
+2. **FACES_BUCKET** - Nome do bucket que conterá as imagens para indexação pelo Rekognition, usadas na Lambda e Job. Deverá ser previamente criado no console AWS.
+3. **SITE_BUCKET** - Nome do bucket que conterá a pagina web para exibir os resultados. Deverá ser previamente criado no console AWS.
+
+
+## Logs
+
+Foi implementado um módulo para geração de **Logs** da aplicação, de modo que são gerados arquivos de Log correspondentes ao dia em que a aplicação é executada. O módulo de Log é configurado para que, a cada dia, seja usado um arquivo diferente para o registro, mantendo melhor rastreabilidade. Isso foi feito pensando em como seria útil para um ambiente de produção e desenvolvimento.  
+
+Assim sendo, tanto para o Job quanto para a Lambda, são garvados os possíveis erros, mantendo a pilha de exceção, a fim de facilitar o debug. Além disso, é feito registro dos resultados com sucesso.
