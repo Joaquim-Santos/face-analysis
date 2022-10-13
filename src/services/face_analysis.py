@@ -1,9 +1,9 @@
 from typing import List, Dict, Union
 from botocore.exceptions import ClientError
 
-from src.logger import Logger
+from common.logger import Logger
 from src.services.image_index import ImageIndex
-from src.exceptions import BadRequest, GenericException
+from common.exceptions import BadRequest, GenericException
 
 
 class FaceAnalysis:

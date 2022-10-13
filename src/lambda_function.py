@@ -1,5 +1,5 @@
 from src.services.face_analysis import FaceAnalysis
-from src.exceptions.abstract_exception import AbstractException
+from common.exceptions.abstract_exception import AbstractException
 
 
 def lambda_handler(event: dict, context) -> dict:

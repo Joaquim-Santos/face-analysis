@@ -1,12 +1,13 @@
-from src.exceptions.abstract_exception import AbstractException
+from common.exceptions.abstract_exception import AbstractException
 
 
-class BadRequest(AbstractException):
+class GenericException(AbstractException):
 
-    def __init__(self, message: str = 'Requisição inválida.', status_code: int = 400,
+    def __init__(self, message: str = 'Ocorreu um comportamento inesperado.', status_code: int = 500,
                  payload: dict = None) -> None:
         """
-            O servidor não entendeu a requisição, pois está com uma sintaxe inválida.
+            Exceção para propósito genérico, quando não há nenhuma específica para uso, acusando um
+            erro interno no servidor
 
             Parameters
             ----------
@@ -16,7 +17,7 @@ class BadRequest(AbstractException):
 
             status_code: int
                 Código de status HTTP.
-                Default: 400
+                Default: 500
 
             payload: dict
                 Dados de payload para envio na resposta da exceção.
