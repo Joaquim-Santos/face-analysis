@@ -59,7 +59,7 @@ Também é necessário definir o CORS para o endpoint do site estático:
 ```
 Em AllowedOrigins, substituir pelo endpoint definido na hospedagem do bucket.
 
-No bucket de imagens, deve-se também adicionar a permissão para que o endpoint do site possa fazer requisções GET e obter as imagens:
+No bucket de imagens, deve-se também liberar acesso público e adicionar a permissão para que o endpoint do site possa fazer requisções GET e obter as imagens:
 
 ```
 {
