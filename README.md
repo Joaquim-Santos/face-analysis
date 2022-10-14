@@ -145,7 +145,7 @@ Assim sendo, tanto para o Job quanto para a Lambda, são garvados os possíveis 
 
 ## Organização
 
-A arquitetura da aplicação está contida em src, dividida em módulos:
+A arquitetura da aplicação está contida em **src**, dividida em módulos:
 
 1. **common**: Módulos para uso comum no restante da aplicação, possuindo:
     1.1. **exceptions**: Classes de exceção personalizadas.
