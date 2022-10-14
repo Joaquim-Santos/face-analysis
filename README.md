@@ -155,3 +155,31 @@ A arquitetura da aplicação está contida em **src**, dividida em módulos:
 2.**services**: Classes responsáveis pela conexão com serviços AWS S3 e Rekognition. Nesse, **image_index** é responsável pela indexação de imagens e comunicação com S3, enquanto que **face_analysis** irá receber eventos de upload no Bucket direcionados à Lambda.
 3. **lambda_function**: Irá ser chamado pelo Lambda e direcionar os eventos para o módulo correspondente.
 4. **job_index_collection**: Serám chamado pelo Job executado em EC2, a fim de indexar todas as imagens do Bucket.
+
+## Testes
+
+Separadamente dos módulos que definem as funcionalidades, foram criados os módulos de testes unitários, no diretório **tests**. Para sua estrutura, é recomendado definir o pacote:
+
+- **features**: Conterá os arquivos de teste referentes a cada feature implementada., os quais foram separados por móodulos, buscando ter a cobertura da maior parte do código. Deve-se definir as variáveis de ambiente antes da execução:
+
+1. **COLLECTION_ID** - Nome da coleção usada nos teste, devendo ser definida com um nome diferente dquele usada no outro ambiente (e.g. faces-test). Deverá ser criada ao executar os testes.
+2. **FACES_BUCKET** - Nome do bucket de teste que conterá as imagens, deverendo ser previamente criado no console AWS (e.g. face-analysis-images-test).
+3. **SITE_BUCKET** - Nome do bucket de teste que conterá a pagina web. deverendo ser previamente criado no console AWS (e.g. face-analysis-site-test).
+
+Para implementar os testes de cada funcionalidade:
+
+- Criar um arquivo de teste, sempre iniciado com **test_**, seguido pelo nome da feature.
+- No arquivo, criar a classe, sempre iniciando com Test, seguido pelo nome da funcionalidade.
+- Dentro da classe, criar os métodos de teste, seguindo o padrão de nomeclatura, cobrindo os possíveis fluxos.
+
+Para nomear os métodos de teste, baseou-se o padrão **test[Feature being tested],** definido no item 3 da referência:
+
+[Estratégias populares para nomear testes](https://dzone.com/articles/7-popular-unit-test-naming)
+
+Foi feita uma mudança para adaptação ao padrão do Python. Nesse caso, o nome sempre iniciará com o prefixo **test_**, seguido pelo nome da funcionalidade a ser testada, seguido por uma condição, indicada por um *if*.
+
+A definição dos testes e sua execução são feitos com base na lib do *pytest*. Por assim ser, deve ser criado o módulo de conftest.py, o qual deve estar sempre em **tests/conftest.py**. Esse contém as configurações inicias para antes de executar os testes, tais como fixtures da própria lib, para outras configurações a serem feitas antes e/ou após certos testes.
+
+Para execução de todos os testes, basta executar o comando do pytest apontando para o diretório tests. Automaticamente, a lib reconhece todos os testes pelo padrão de nomeclatura (todos os arquivos, classes e métodos iniciados com o prefixo test), sendo possível executar testes apenas em diretórios específicos. Deve-se também ter as variáveis de ambiente definidas em algum lugar, como em um arquivo *.env* ou nas opções da IDE. 
+
+O bucket do site pode ser criado vazio, sendo apenas para conter os dados de saída dos testes. Já o bucket de imagens pode ser criado com algumas poucas imagens em input/ e duas imagens em output/, uma que dê match com alguma imagem em input/ e outra que não.
