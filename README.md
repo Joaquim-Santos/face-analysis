@@ -74,4 +74,4 @@ No momento, as variáveis de ambiente necessárias para execução do projeto s�
 
 Foi implementado um módulo para geração de **Logs** da aplicação, de modo que são gerados arquivos de Log correspondentes ao dia em que a aplicação é executada. O módulo de Log é configurado para que, a cada dia, seja usado um arquivo diferente para o registro, mantendo melhor rastreabilidade. Isso foi feito pensando em como seria útil para um ambiente de produção e desenvolvimento.  
 
-Assim sendo, tanto para o Job quanto para a Lambda, são garvados os possíveis erros, mantendo a pilha de exceção, a fim de facilitar o debug. Além disso, é feito registro dos resultados com sucesso.
+Assim sendo, tanto para o Job quanto para a Lambda, são garvados os possíveis erros, mantendo a pilha de exceção, a fim de facilitar o debug. Além disso, é feito registro dos resultados com sucesso. Além disso, após determinado período (Inicialmente 30 dias), os arquivos de log correspondentes gerados nesse tempo são removidos, evitando acúmulo desnecessário.
