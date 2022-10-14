@@ -85,6 +85,10 @@ No bucket de imagens, deve-se também liberar acesso público e adicionar a perm
 ```
 Em StringLike, substituir pelo endpoint definido na hospedagem do bucket.
 
+Outro ponto é que, para o Bucket de imagens, devem ser criados os diretórios:
+- **input/**: Irá conter as imagens a serem indexadas pelo Job, que serão a base para o match.
+- **output/**: Conterá as imagens do upload para verificar o match, que serirão de Trigger para a Lambda.
+
 # Dependências
 
 ## Instalações
