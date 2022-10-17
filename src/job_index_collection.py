@@ -17,6 +17,19 @@ class JobIndexCollection:
         self.__retry_minutes = 60
 
         self.__number_of_indexed_images = 0
+        self.__success = False
+
+    @property
+    def number_of_indexed_images(self) -> int:
+        return self.__number_of_indexed_images
+
+    @property
+    def success(self) -> bool:
+        return self.__success
+
+    @property
+    def retries(self) -> int:
+        return self.__retries
 
     def __retry(self) -> None:
         self.__retries += 1
@@ -31,13 +44,12 @@ class JobIndexCollection:
         else:
             self.__logger.log.warning(f"Foram feitas {self.__max_retries} retentativa e o Job não teve sucesso.")
 
-    def __index_collection(self) -> bool:
+    def __index_collection(self) -> None:
         self.__logger.log.info(f"Iniciada Execução do Job.")
-        success = False
 
         try:
             indexed_images = self.__image_index.index_input_images()
-            success = True
+            self.__success = True
             self.__number_of_indexed_images = len(indexed_images)
 
             self.__logger.log.info(f"Job finalizado com sucesso.\n"
@@ -52,12 +64,10 @@ class JobIndexCollection:
 
             self.__logger.log.exception(message, exc_info=generic_error)
 
-        return success
-
     def start(self) -> None:
-        success = self.__index_collection()
+        self.__index_collection()
 
-        if not success:
+        if not self.__success:
             self.__retry()
 
 
