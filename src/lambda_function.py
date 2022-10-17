@@ -8,17 +8,12 @@ def lambda_handler(event: dict, context) -> dict:
 
         return {
             'statusCode': 200,
-            'body': f'Detectadas {len(detected_images)} imagens.'
+            'body': f'Detectada(s) {len(detected_images)} imagem(ns).'
         }
     except AbstractException as detected_error:
         return {
             'statusCode': detected_error.status_code,
             'body': detected_error.message
-        }
-    except Exception as generic_error:
-        return {
-            'statusCode': 500,
-            'body': str(generic_error)
         }
 
 

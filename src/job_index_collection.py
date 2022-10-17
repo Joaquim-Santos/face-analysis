@@ -16,6 +16,8 @@ class JobIndexCollection:
         self.__max_retries = 5
         self.__retry_minutes = 60
 
+        self.__number_of_indexed_images = 0
+
     def __retry(self) -> None:
         self.__retries += 1
 
@@ -35,13 +37,11 @@ class JobIndexCollection:
 
         try:
             indexed_images = self.__image_index.index_input_images()
+            success = True
+            self.__number_of_indexed_images = len(indexed_images)
 
-            if len(indexed_images) > 0:
-                success = True
-                self.__logger.log.info(f"Job finalizado com sucesso.\n"
-                                       f"Total de imagens indexadas: {len(indexed_images)}")
-            else:
-                self.__logger.log.warning(f"Job finalizado sem falhas, mas não indexou nehuma imagem.")
+            self.__logger.log.info(f"Job finalizado com sucesso.\n"
+                                   f"Total de imagens indexadas: {self.__number_of_indexed_images}")
         except ClientError as client_error:
             message = f"Erro ao chamar serviços AWS para execução do Job: " \
                       f"{client_error.response['Error']['Message']}"
