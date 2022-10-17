@@ -164,7 +164,7 @@ A arquitetura da aplicação está contida em **src**, dividida em módulos:
 
 Separadamente dos módulos que definem as funcionalidades, foram criados os módulos de testes unitários, no diretório **tests**. Para sua estrutura, é recomendado definir o pacote:
 
-- **features**: Conterá os arquivos de teste referentes a cada feature implementada., os quais foram separados por móodulos, buscando ter a cobertura da maior parte do código. Deve-se definir as variáveis de ambiente antes da execução:
+- **features**: Conterá os arquivos de teste referentes a cada feature implementada, os quais foram separados por módulos, buscando ter a cobertura da maior parte do código. Deve-se definir as variáveis de ambiente antes da execução:
 
 1. **COLLECTION_ID** - Nome da coleção usada nos teste, devendo ser definida com um nome diferente dquele usada no outro ambiente (e.g. faces-test). Deverá ser criada ao executar os testes.
 2. **FACES_BUCKET** - Nome do bucket de teste que conterá as imagens, deverendo ser previamente criado no console AWS (e.g. face-analysis-images-test).
@@ -173,7 +173,7 @@ Separadamente dos módulos que definem as funcionalidades, foram criados os mód
 Para implementar os testes de cada funcionalidade:
 
 - Criar um arquivo de teste, sempre iniciado com **test_**, seguido pelo nome da feature.
-- No arquivo, criar a classe, sempre iniciando com Test, seguido pelo nome da funcionalidade.
+- No arquivo, criar a classe, sempre iniciando com **Test**, seguido pelo nome da funcionalidade.
 - Dentro da classe, criar os métodos de teste, seguindo o padrão de nomeclatura, cobrindo os possíveis fluxos.
 
 Para nomear os métodos de teste, baseou-se o padrão **test[Feature being tested],** definido no item 3 da referência:
