@@ -1,22 +1,23 @@
 import boto3
-import os
 import json
 
 from typing import List, Dict, Union
 from botocore.exceptions import ClientError
 
 from src.services.s3_service import S3Service
+from src.common.constants import FACES_BUCKET, SITE_BUCKET, \
+    FACES_BUCKET_INPUT_PREFIX, COLLECTION_ID
 
 
 class ImageIndex:
     def __init__(self) -> None:
         self.__s3_service = S3Service()
-        self.__faces_bucket = os.environ['FACES_BUCKET']
-        self.__site_bucket = os.environ['SITE_BUCKET']
-        self.__input_prefix = 'input/'
+        self.__faces_bucket = FACES_BUCKET
+        self.__site_bucket = SITE_BUCKET
+        self.__input_prefix = FACES_BUCKET_INPUT_PREFIX
 
         self.__rekognition_client = boto3.client('rekognition')
-        self.__collection_id = os.environ['COLLECTION_ID']
+        self.__collection_id = COLLECTION_ID
         self.__target_image_id = 'target'
 
     def __list_input_images(self) -> Dict[str, str]:

@@ -71,5 +71,5 @@ class JobIndexCollection:
             self.__retry()
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     JobIndexCollection().start()

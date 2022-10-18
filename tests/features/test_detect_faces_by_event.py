@@ -39,6 +39,7 @@ def upload_image_event() -> dict:
     }
 
 
+@pytest.mark.usefixtures("index_collection")
 class TestDetectFacesByEvent:
 
     @staticmethod
@@ -59,8 +60,12 @@ class TestDetectFacesByEvent:
         del upload_image_event['Records'][0]['s3']['object']['key']
         detected_images = lambda_handler(upload_image_event, {})
 
-        assert detected_images == {'statusCode': 400,
-                                   'body': "Evento recebido não possui campos necessários: 'key'"}
+        assert detected_images == {
+            'statusCode': 400,
+            'body': {
+                'error_message': "Evento recebido não possui campos necessários: 'key'",
+                'payload': {'error': "'key'"}}
+        }
 
     @staticmethod
     def test_client_error_in_detect_faces_if_s3_key_does_not_exist(upload_image_event: dict) -> None:
@@ -69,8 +74,16 @@ class TestDetectFacesByEvent:
 
         assert detected_images == {
             'statusCode': 400,
-            'body': 'Erro ao chamar serviços AWS para detecção de faces: Unable to get object metadata from S3. '
-                    'Check object key, region and/or access permissions.'
+            'body': {
+                'error_message': 'Erro ao chamar serviços AWS para detecção de faces: Unable '
+                                 'to get object metadata from S3. Check object key, region '
+                                 'and/or access permissions.',
+                'payload': {
+                    'client_error': 'Erro ao chamar serviços AWS para detecção de faces: Unable '
+                                    'to get object metadata from S3. Check object key, region '
+                                    'and/or access permissions.'
+                }
+            }
         }
 
     @staticmethod
@@ -82,5 +95,10 @@ class TestDetectFacesByEvent:
         fake_get_detected_faces_ids.side_effect = KeyError('FaceId')
         detected_images = lambda_handler(upload_image_event, {})
 
-        assert detected_images == {'statusCode': 500,
-                                   'body': "Erro desconhecido durante detecção de faces: 'FaceId'"}
+        assert detected_images == {
+            'statusCode': 500,
+            'body': {
+                'error_message': "Erro desconhecido durante detecção de faces: 'FaceId'",
+                'payload': {'generic_error': "Erro desconhecido durante detecção de faces: 'FaceId'"}
+            }
+        }

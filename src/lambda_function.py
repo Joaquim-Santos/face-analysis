@@ -13,11 +13,11 @@ def lambda_handler(event: dict, context) -> dict:
     except AbstractException as detected_error:
         return {
             'statusCode': detected_error.status_code,
-            'body': detected_error.message
+            'body': detected_error.to_dict()
         }
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     local_event = {
         'Records': [
             {

@@ -1,0 +1,7 @@
+import os
+
+
+FACES_BUCKET_INPUT_PREFIX = 'input/'
+FACES_BUCKET = os.environ['FACES_BUCKET']
+SITE_BUCKET = os.environ['SITE_BUCKET']
+COLLECTION_ID = os.environ['COLLECTION_ID']
