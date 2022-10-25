@@ -87,7 +87,7 @@ Em StringLike, substituir pelo endpoint definido na hospedagem do bucket.
 
 Outro ponto é que, para o Bucket de imagens, devem ser criados os diretórios:
 - **input/**: Irá conter as imagens a serem indexadas pelo Job, que serão a base para o match.
-- **output/**: Conterá as imagens do upload para verificar o match, que serirão de Trigger para a Lambda.
+- **output/**: Conterá as imagens do upload para verificar o match com aquelas em input/, que servirão de Trigger para a Lambda.
 
 # Dependências
 
@@ -184,6 +184,14 @@ Foi feita uma mudança para adaptação ao padrão do Python. Nesse caso, o nome
 
 A definição dos testes e sua execução são feitos com base na lib do *pytest*. Por assim ser, deve ser criado o módulo de conftest.py, o qual deve estar sempre em **tests/conftest.py**. Esse contém as configurações inicias para antes de executar os testes, tais como fixtures da própria lib, para outras configurações a serem feitas antes e/ou após certos testes.
 
-Para execução de todos os testes, basta executar o comando do pytest apontando para o diretório tests. Automaticamente, a lib reconhece todos os testes pelo padrão de nomeclatura (todos os arquivos, classes e métodos iniciados com o prefixo test), sendo possível executar testes apenas em diretórios específicos. Deve-se também ter as variáveis de ambiente definidas em algum lugar, como em um arquivo *.env* ou nas opções da IDE. 
+Para execução de todos os testes, basta executar o comando do pytest apontando para o diretório tests. Automaticamente, a lib reconhece todos os testes pelo padrão de nomeclatura (todos os arquivos, classes e métodos iniciados com o prefixo test), sendo possível executar testes apenas em diretórios específicos. Deve-se também ter as variáveis de ambiente definidas em algum lugar, como em um arquivo *.env* ou nas opções da IDE.
 
-O bucket do site pode ser criado vazio, sendo apenas para conter os dados de saída dos testes. Já o bucket de imagens pode ser criado com algumas poucas imagens em input/ e duas imagens em output/, uma que dê match com alguma imagem em input/ e outra que não.
+Para gerar um relatório de cobertura em HTML, executar com os parâmetros:
+
+```
+pytest --cov --cov-report=html
+```
+
+Para conferir, abrir o **index.html** no dirtório **htmlcov** que for gerado.
+
+O bucket do site pode ser criado vazio, sendo apenas para conter os dados de saída dos testes. Já o bucket de imagens pode ser criado com algumas poucas imagens em input/ e algumas em output/ que tenham match. Os testes devem ser alterados para refletir a quantidade de imagens e matches.
