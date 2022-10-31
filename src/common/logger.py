@@ -2,6 +2,7 @@ import logging
 import sys
 import os
 import glob
+import time
 
 from typing import Literal
 from pathlib import Path
@@ -26,14 +27,16 @@ class Logger:
         return self.__log_file_name
 
     def __remove_expired_files(self, log_file_path: Union[str, Path]) -> None:
-        files_count = os.listdir(log_file_path)
+        expiration_seconds = time.time() - (self.__expiration_days * 24 * 60 * 60)
 
-        if len(files_count) > self.__expiration_days:
-            log_file_path = os.path.join(log_file_path, '*')
-            files = glob.glob(log_file_path)
+        log_file_path = os.path.join(log_file_path, '*')
+        files = glob.glob(log_file_path)
 
-            for log_file in files:
-                os.remove(log_file)
+        for log_file in files:
+            last_change_time = os.stat(log_file).st_ctime
+
+            if expiration_seconds >= last_change_time:
+                os.remove(log_file)  # pragma: no cover
 
     def __set_log_file_name(self, name: str) -> None:
         log_file_path = os.path.join(os.path.realpath(__file__), *['..', '..', '..', 'logs'])

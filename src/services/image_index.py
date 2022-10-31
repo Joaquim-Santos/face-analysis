@@ -37,7 +37,7 @@ class ImageIndex:
     def __clean_collection(self) -> None:
         try:
             self.__rekognition_client.delete_collection(CollectionId=self.__collection_id)
-        except ClientError:
+        except ClientError:  # pragma: no cover
             pass
 
         self.__rekognition_client.create_collection(CollectionId=self.__collection_id)
