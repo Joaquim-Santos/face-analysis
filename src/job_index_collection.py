@@ -7,9 +7,8 @@ from src.services.image_index import ImageIndex
 
 
 class JobIndexCollection:
-
     def __init__(self) -> None:
-        self.__logger = Logger('job_index_collection')
+        self.__logger = Logger("job_index_collection")
         self.__image_index = ImageIndex()
 
         self.__retries = 0
@@ -36,27 +35,35 @@ class JobIndexCollection:
 
         if self.__retries <= self.__max_retries:
             wait = self.__retries * self.__retry_minutes
-            self.__logger.log.warning(f"Iniciar retentativa {self.__retries} em "
-                                      f"{wait/self.__retry_minutes} minutos.")
+            self.__logger.log.warning(
+                f"Iniciar retentativa {self.__retries} em "
+                f"{wait/self.__retry_minutes} minutos."
+            )
 
             time.sleep(wait)
             self.start()
         else:
-            self.__logger.log.warning(f"Foram feitas {self.__max_retries} retentativa e o Job não teve sucesso.")
+            self.__logger.log.warning(
+                f"Foram feitas {self.__max_retries} retentativa e o Job não teve sucesso."
+            )
 
     def __index_collection(self) -> None:
-        self.__logger.log.info(f"Iniciada Execução do Job.")
+        self.__logger.log.info("Iniciada Execução do Job.")
 
         try:
             indexed_images = self.__image_index.index_input_images()
             self.__success = True
             self.__number_of_indexed_images = len(indexed_images)
 
-            self.__logger.log.info(f"Job finalizado com sucesso.\n"
-                                   f"Total de imagens indexadas: {self.__number_of_indexed_images}")
+            self.__logger.log.info(
+                f"Job finalizado com sucesso.\n"
+                f"Total de imagens indexadas: {self.__number_of_indexed_images}"
+            )
         except ClientError as client_error:
-            message = f"Erro ao chamar serviços AWS para execução do Job: " \
-                      f"{client_error.response['Error']['Message']}"
+            message = (
+                f"Erro ao chamar serviços AWS para execução do Job: "
+                f"{client_error.response['Error']['Message']}"
+            )
 
             self.__logger.log.exception(message, exc_info=client_error)
         except Exception as generic_error:
@@ -71,5 +78,5 @@ class JobIndexCollection:
             self.__retry()
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     JobIndexCollection().start()

@@ -1,0 +1,10 @@
+[flake8]
+per-file-ignores =
+    __init__.py:F401
+    test_*:ANN001,ANN101,ANN201
+    conftest.py:F405
+ignore = E203, E266, E501, W503, F403, ANN101, ANN102, ANN204
+max-line-length = 120
+max-complexity = 18
+select = B,C,E,F,W,T4,B9
+statistics = True
