@@ -3,11 +3,34 @@ import sys
 import os
 import glob
 import time
+import pytz
 
 from typing import Literal
 from pathlib import Path
-from datetime import date
+from datetime import date, datetime
 from typing import Union
+
+
+class Formatter(logging.Formatter):
+    """override logging.Formatter to use an aware datetime object"""
+
+    @staticmethod
+    def converter(timestamp: float) -> datetime:
+        target_date = datetime.fromtimestamp(timestamp, tz=pytz.UTC)
+        return target_date.astimezone(pytz.timezone("America/Sao_Paulo"))
+
+    def formatTime(self, record: logging.LogRecord, datefmt: str = None) -> str:
+        target_date = self.converter(record.created)
+
+        if datefmt:
+            str_date = target_date.strftime(datefmt)
+        else:
+            try:
+                str_date = target_date.isoformat(timespec="milliseconds")
+            except TypeError:
+                str_date = target_date.isoformat()
+
+        return str_date
 
 
 class Logger:
@@ -62,7 +85,7 @@ class Logger:
         logger = logging.getLogger(name)
         logger.setLevel(level)
 
-        formatter = logging.Formatter(log_format)
+        formatter = Formatter(log_format, "%Y-%m-%d %H:%M:%S")
         self.__set_log_file_name(name)
 
         file_handler = logging.FileHandler(
