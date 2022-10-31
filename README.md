@@ -210,3 +210,9 @@ Feito isso, todas as verificações serão executadas nos commits. Para executá
  - pre-commit run --all-files
  
  No arquivo do flake8, foram informados alguns erros para serem ignorados, segundo os códigos de erro do PEP8, listado em: https://flake8.pycqa.org/en/2.5.5/warnings.html#error-codes
+ 
+ # Build Automático
+
+Foi utilizado o Git Actions para definição de um workflow para **Integração Contínua**. Esse foi configurado em .github/workflows/python-app.yml, de modo que sempre que for realizado um push ou Pull Request para a branch main, será feito o build definido nesse arquivo. O mesmo irá realizar a verificação de qualidade do código com flake8, bem como executar os testes unitários com Pytest, gerando o relatório de cobertura. Então, caso tudo seja executado com sucesso, é feita a integração.
+
+As variáveis de ambiente necessárias para os testes foram definidas pela configuração de **Secrets** para uso nas Actions.
