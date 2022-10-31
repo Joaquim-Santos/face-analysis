@@ -2,7 +2,7 @@ import time
 
 from botocore.exceptions import ClientError
 
-from common.logger import Logger
+from src.common.logger import Logger
 from src.services.image_index import ImageIndex
 
 

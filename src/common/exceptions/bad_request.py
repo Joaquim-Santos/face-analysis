@@ -1,4 +1,4 @@
-from common.exceptions.abstract_exception import AbstractException
+from src.common.exceptions.abstract_exception import AbstractException
 
 
 class BadRequest(AbstractException):
