@@ -34,10 +34,14 @@ class Formatter(logging.Formatter):
 
 
 class Logger:
-    def __init__(self, name: str, level: Literal[20] = logging.INFO) -> None:
+    def __init__(
+        self, name: str, level: Literal[20] = logging.INFO, has_log_file: bool = True
+    ) -> None:
+
         self.__log = None
         self.__log_file_name = ""
         self.__expiration_days = 30
+        self.__has_log_file = has_log_file
 
         self.__log = self.get_logger(name, level)
 
@@ -77,23 +81,27 @@ class Logger:
     def get_logger(
         self, name: str, level: Literal[20] = logging.INFO
     ) -> logging.Logger:
+
         log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        logging.basicConfig(
-            format=log_format, handlers=[logging.StreamHandler(sys.stdout)]
-        )
+        formatter = Formatter(log_format, "%Y-%m-%d %H:%M:%S")
+
+        stream_handler = logging.StreamHandler(sys.stdout)
+        stream_handler.setFormatter(formatter)
+
+        logging.basicConfig(format=log_format, handlers=[stream_handler])
 
         logger = logging.getLogger(name)
         logger.setLevel(level)
 
-        formatter = Formatter(log_format, "%Y-%m-%d %H:%M:%S")
-        self.__set_log_file_name(name)
+        if self.__has_log_file:  # Lambda na AWS não aceita geração de arquivos.
+            self.__set_log_file_name(name)
 
-        file_handler = logging.FileHandler(
-            filename=self.__log_file_name, encoding="UTF-8"
-        )
+            file_handler = logging.FileHandler(
+                filename=self.__log_file_name, encoding="UTF-8"
+            )
 
-        file_handler.setLevel(level)
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
+            file_handler.setLevel(level)
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
 
         return logger

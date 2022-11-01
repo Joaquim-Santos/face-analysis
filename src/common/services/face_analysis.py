@@ -10,7 +10,7 @@ class FaceAnalysis:
     def __init__(self, event: dict) -> None:
         self.__image_name: str
 
-        self.__logger = Logger("face_analysis")
+        self.__logger = Logger("face_analysis", has_log_file=False)
         self.__image_index = ImageIndex()
 
         self.__set_image_name(event)
