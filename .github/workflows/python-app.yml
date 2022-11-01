@@ -45,3 +45,20 @@ jobs:
         SITE_BUCKET: ${{secrets.SITE_BUCKET}}
       run: |
         pytest -v tests --cov --cov-report=xml --cov-report=html
+    
+    - name: Delete unnecessary build files
+      run: | 
+        rm -rf .pytest_cache
+        rm -rf .venv
+        rm -rf __pycache__
+        rm -rf *.dist-info
+        rm -rf *.egg-info
+    
+    - name: Zip Artifacts
+      run: | 
+        zip -r deploy.zip src venv
+    
+    - name: Deploy to AWS
+      env:
+        LAMBDA: ${{secrets.LAMBDA}}
+      run: aws lambda update-function-code --function-name=$LAMBDA --zip-file=fileb://deploy.zip
