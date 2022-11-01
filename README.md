@@ -49,7 +49,7 @@ Também é necessário definir o CORS para o endpoint do site estático:
             "GET"
         ],
         "AllowedOrigins": [
-            "http://face-analysis-site.s3-website-us-east-1.amazonaws.com/"
+            "http://face-analysis-site.s3-website-us-east-1.amazonaws.com"
         ],
         "ExposeHeaders": [
             "Access-Control-Allow-Origin"
