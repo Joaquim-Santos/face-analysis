@@ -60,7 +60,7 @@ jobs:
     
     - name: Zip Artifacts
       run: | 
-        zip -r deploy.zip src venv
+        zip -r deploy.zip .
     
     - name: Deploy to AWS
       env:
