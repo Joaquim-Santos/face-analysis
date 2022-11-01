@@ -1,4 +1,4 @@
-from src.services.face_analysis import FaceAnalysis
+from src.common.services.face_analysis import FaceAnalysis
 from src.common.exceptions.abstract_exception import AbstractException
 
 

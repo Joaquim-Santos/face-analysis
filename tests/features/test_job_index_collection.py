@@ -4,7 +4,7 @@ from mock import patch
 from mock.mock import MagicMock
 
 from src.job_index_collection import JobIndexCollection
-from src.services.s3_service import S3Service
+from src.common.services.s3_service import S3Service
 from src.common.constants import FACES_BUCKET, FACES_BUCKET_INPUT_PREFIX
 
 

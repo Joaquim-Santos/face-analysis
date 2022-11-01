@@ -4,7 +4,7 @@ from mock import patch
 from mock.mock import MagicMock
 
 from src.lambda_function import lambda_handler
-from src.services.image_index import ImageIndex
+from src.common.services.image_index import ImageIndex
 
 
 @pytest.fixture(scope="function", autouse=True)

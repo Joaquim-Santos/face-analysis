@@ -4,7 +4,7 @@ import json
 from typing import List, Dict, Union
 from botocore.exceptions import ClientError
 
-from src.services.s3_service import S3Service
+from src.common.services.s3_service import S3Service
 from src.common.constants import (
     FACES_BUCKET,
     SITE_BUCKET,

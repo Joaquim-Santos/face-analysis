@@ -3,7 +3,7 @@ import time
 from botocore.exceptions import ClientError
 
 from src.common.logger import Logger
-from src.services.image_index import ImageIndex
+from src.common.services.image_index import ImageIndex
 
 
 class JobIndexCollection:
